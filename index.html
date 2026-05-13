@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL vs WebGPU</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        canvas { border: 1px solid black; margin-top: 10px; }
+        .controls { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>WebGL vs WebGPU Minimal PoCs</h1>
+    <div class="controls">
+        <button onclick="runWebGL()">Run WebGL</button>
+        <button onclick="runWebGPU()">Run WebGPU</button>
+    </div>
+    <div>
+        <span id="status">Select a PoC to run</span>
+    </div>
+    <canvas id="gfxCanvas" width="400" height="300"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gfxCanvas');
+        const statusDiv = document.getElementById('status');
+
+        function runWebGL() {
+            statusDiv.textContent = "Running WebGL...";
+            const gl = canvas.getContext('webgl');
+            if (!gl) {
+                statusDiv.textContent = "WebGL not supported";
+                return;
+            }
+            gl.clearColor(1.0, 0.0, 0.0, 1.0); // Red
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            statusDiv.textContent = "WebGL running (Red)";
+        }
+
+        async function runWebGPU() {
+            statusDiv.textContent = "Running WebGPU...";
+            if (!navigator.gpu) {
+                statusDiv.textContent = "WebGPU not supported in this browser.";
+                return;
+            }
+
+            const adapter = await navigator.gpu.requestAdapter();
+            if (!adapter) {
+                statusDiv.textContent = "Failed to get WebGPU adapter.";
+                return;
+            }
+
+            const device = await adapter.requestDevice();
+            const context = canvas.getContext('webgpu');
+            const format = navigator.gpu.getPreferredCanvasFormat();
+
+            context.configure({
+                device: device,
+                format: format,
+                alphaMode: 'opaque'
+            });
+
+            const commandEncoder = device.createCommandEncoder();
+            const renderPassDescriptor = {
+                colorAttachments: [{
+                    view: context.getCurrentTexture().createView(),
+                    clearValue: { r: 0.0, g: 1.0, b: 0.0, a: 1.0 }, // Green
+                    loadOp: 'clear',
+                    storeOp: 'store'
+                }]
+            };
+
+            const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
+            passEncoder.end();
+            device.queue.submit([commandEncoder.finish()]);
+
+            statusDiv.textContent = "WebGPU running (Green)";
+        }
+    </script>
+</body>
+</html>
