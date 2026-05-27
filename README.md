@@ -2,6 +2,9 @@
 
 This repository contains the smallest possible Proof of Concepts (PoCs) for WebGL and WebGPU, designed to be hosted on GitHub Pages.
 
+**Live Demo:** [http://varun.khaneja.org/web-gl-gpu-test/](http://varun.khaneja.org/web-gl-gpu-test/)
+
+
 ## Features
 
 - **WebGL PoC**: Clears the canvas to a solid **Red** color (`#FF0000`).
