@@ -1,7 +1,13 @@
 # WebGL and WebGPU Minimal PoCs
 
-This project showcases the smallest Proof of Concepts (PoCs) for WebGL and WebGPU on a static website hosted on GitHub Pages.
+This repository contains the smallest possible Proof of Concepts (PoCs) for WebGL and WebGPU, designed to be hosted on GitHub Pages.
+
+## What it does
+
+- **WebGL PoC**: Clears the canvas to a solid **Red** color (`#FF0000`).
+- **WebGPU PoC**: Clears the canvas to a solid **Green** color (`#00FF00`).
 
 ## Usage
 
-Open `index.html` in a browser that supports WebGL and WebGPU. Use the interface to switch between the two PoCs.
+Open `index.html` in a compatible web browser. Use the buttons to trigger either the WebGL context clear or the WebGPU context clear.
+
